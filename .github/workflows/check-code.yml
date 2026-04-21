@@ -14,6 +14,9 @@ jobs:
   test:
     name: 编译与样例测试
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: 检出代码
@@ -120,3 +123,12 @@ jobs:
 
           echo ""
           echo "✅ 所有 C/C++ 文件均编译成功且通过全部样例测试！"
+
+      - name: 自动合并 PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --merge \
+            --subject "✅ CI 通过，自动合并：${{ github.event.pull_request.title }}"
