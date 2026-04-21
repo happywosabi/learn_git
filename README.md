@@ -6,12 +6,21 @@
 首先:**你需要一个github账户**，请在注册后将用户名发到我微信上
 然后:我会给予这个仓库的提交权限
 ![截屏2026-04-21 18.11.05.png](https://blog.happywosabi.top/upload/%E6%88%AA%E5%B1%8F2026-04-21%2018.11.05.png)
-我为你们每个人创建一个git分支
+我为你们每个人创建了一个git分支
 **请务必将你们的报告提交到自己的分支上**
 
 ⚠️⚠️注意⚠️⚠️
-所有分支都是受保护的分支，你**不能直接使用git push提交**而是要使用**git Request**
-😡😡😡😡😡不要自建分支😡😡😡😡😡
+所有分支都是受保护的分支，你**不能直接使用git push提交到分支**而是要先创建一个dev分支，将代码提交上去，然后再到github上创建分支合并申请，这时会有机器**自动处理**你的请求
+😡😡😡main分支不是保护分支，我看看谁敢把代码提交到main上😡😡😡
+```
+git checkout lwd                    # 切换到自己的分支
+git checkout -b lwd-my-solution     # 创建个人功能分支
+# 编写 README.md 和 solution.c
+git add . && git commit -m "提交作业"
+git push origin lwd-my-solution     # 推送功能分支
+# 去 GitHub 创建 PR：lwd-my-solution → lwd
+# CI 自动测试，通过后才能合并
+```
 
 ## 2. 编写readme.md
 请你们使用markdown格式编写git学校报告
@@ -23,7 +32,23 @@
 
 2.完成git提交的命令行输出
 ```
-
+a0000@0000deMacBook-Air vscode % git add solution.c && git commit -m "提交 A+B 解法" && git push origin lwd-test-submit
+[lwd-test-submit a8b7e81] 提交 A+B 解法 (lwd 分支测试)
+ 1 file changed, 8 insertions(+)
+ create mode 100644 solution.c
+Enumerating objects: 23, done.
+Counting objects: 100% (23/23), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (19/19), 2.21 KiB | 2.21 MiB/s, done.
+Total 19 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 1 local object.
+remote: 
+remote: Create a pull request for 'lwd-test-submit' on GitHub by visiting:
+remote:      https://github.com/happywosabi/learn_git/pull/new/lwd-test-submit
+remote: 
+To github.com:happywosabi/learn_git.git
+ * [new branch]      lwd-test-submit -> lwd-test-submit
 ```
 ## 3.一个可以运行的C语言程序
 #### Q:为什么要提交一个C语言程序？
