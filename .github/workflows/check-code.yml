@@ -41,10 +41,6 @@ jobs:
 
       - name: 编译并用样例测试
         run: |
-          # A+B Problem 样例
-          echo "20 30" > /tmp/input.txt
-          EXPECTED="50"
-
           ALL_PASSED=true
 
           while IFS= read -r file; do
@@ -68,32 +64,49 @@ jobs:
             fi
 
             echo "编译成功 ✓"
+            FILE_PASSED=true
 
-            # 运行并检测超时（5秒）
-            if ! timeout 5 /tmp/student_program < /tmp/input.txt > /tmp/output.txt 2>&1; then
-              EXIT_CODE=$?
-              if [ $EXIT_CODE -eq 124 ]; then
-                echo "::error file=$file::程序运行超时（超过 5 秒），可能存在死循环。"
-              else
-                echo "::error file=$file::程序运行时发生错误，退出码：$EXIT_CODE"
+            # 遍历 tests/ 下所有样例
+            for input_file in tests/*.in; do
+              [ -f "$input_file" ] || continue
+              ans_file="${input_file%.in}.ans"
+              [ -f "$ans_file" ] || continue
+              case_name=$(basename "$input_file" .in)
+
+              echo "--- 测试点 $case_name ---"
+
+              # 运行并检测超时（5秒）
+              if ! timeout 5 /tmp/student_program < "$input_file" > /tmp/output.txt 2>/tmp/stderr.txt; then
+                EXIT_CODE=$?
+                if [ $EXIT_CODE -eq 124 ]; then
+                  echo "::error file=$file::测试点 $case_name：运行超时（超过 5 秒），可能存在死循环。"
+                else
+                  echo "::error file=$file::测试点 $case_name：运行时错误，退出码：$EXIT_CODE"
+                  cat /tmp/stderr.txt
+                fi
+                FILE_PASSED=false
+                continue
               fi
-              ALL_PASSED=false
-              continue
-            fi
 
-            # 对比输出（忽略行尾空白和末尾换行）
-            ACTUAL=$(cat /tmp/output.txt | sed 's/[[:space:]]*$//' | sed '/^$/d')
+              # 对比输出（忽略行尾空白和末尾换行）
+              ACTUAL=$(sed 's/[[:space:]]*$//' /tmp/output.txt | sed '/^$/d')
+              EXPECTED=$(sed 's/[[:space:]]*$//' "$ans_file" | sed '/^$/d')
 
-            if [ "$ACTUAL" = "$EXPECTED" ]; then
-              echo "样例测试通过 ✓"
-              echo "  输入：$(cat /tmp/input.txt)"
-              echo "  期望：$EXPECTED"
-              echo "  实际：$ACTUAL"
-            else
-              echo "::error file=$file::样例测试失败！"
-              echo "  输入：$(cat /tmp/input.txt)"
-              echo "  期望输出：$EXPECTED"
-              echo "  实际输出：$ACTUAL"
+              if [ "$ACTUAL" = "$EXPECTED" ]; then
+                echo "  ✓ 通过"
+                echo "    输入：$(cat "$input_file")"
+                echo "    期望：$EXPECTED"
+                echo "    实际：$ACTUAL"
+              else
+                echo "::error file=$file::测试点 $case_name 未通过！"
+                echo "    输入：$(cat "$input_file")"
+                echo "    期望输出：$EXPECTED"
+                echo "    实际输出：$ACTUAL"
+                FILE_PASSED=false
+              fi
+            done
+
+            if [ "$FILE_PASSED" = false ]; then
               ALL_PASSED=false
             fi
 
@@ -106,4 +119,4 @@ jobs:
           fi
 
           echo ""
-          echo "✅ 所有 C/C++ 文件均编译成功且通过样例测试！"
+          echo "✅ 所有 C/C++ 文件均编译成功且通过全部样例测试！"
