@@ -1,0 +1,109 @@
+name: 编译并测试 C/C++ 代码
+
+on:
+  pull_request:
+    branches:
+      - wql
+      - zbw
+      - cwm
+      - lwd
+      - hyp
+      - zwd
+
+jobs:
+  test:
+    name: 编译与样例测试
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 查找本次 PR 中新增或修改的 C/C++ 文件
+        id: find-files
+        run: |
+          git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD \
+            | grep -E '\.(c|cpp)$' > changed_files.txt || true
+
+          if [ ! -s changed_files.txt ]; then
+            echo "::error::本次 PR 中未找到任何 .c 或 .cpp 文件，请提交你的 C/C++ 源码！"
+            exit 1
+          fi
+
+          echo "本次 PR 包含以下 C/C++ 文件："
+          cat changed_files.txt
+          echo "files=$(cat changed_files.txt | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+
+      - name: 安装编译工具
+        run: sudo apt-get install -y gcc g++
+
+      - name: 编译并用样例测试
+        run: |
+          # A+B Problem 样例
+          echo "20 30" > /tmp/input.txt
+          EXPECTED="50"
+
+          ALL_PASSED=true
+
+          while IFS= read -r file; do
+            echo "========================================"
+            echo "正在测试文件: $file"
+            echo "========================================"
+
+            # 编译
+            if [[ "$file" == *.cpp ]]; then
+              if ! g++ -o /tmp/student_program "$file" --std=c++17 2>&1; then
+                echo "::error file=$file::编译失败！请检查你的 C++ 代码。"
+                ALL_PASSED=false
+                continue
+              fi
+            else
+              if ! gcc -o /tmp/student_program "$file" 2>&1; then
+                echo "::error file=$file::编译失败！请检查你的 C 代码。"
+                ALL_PASSED=false
+                continue
+              fi
+            fi
+
+            echo "编译成功 ✓"
+
+            # 运行并检测超时（5秒）
+            if ! timeout 5 /tmp/student_program < /tmp/input.txt > /tmp/output.txt 2>&1; then
+              EXIT_CODE=$?
+              if [ $EXIT_CODE -eq 124 ]; then
+                echo "::error file=$file::程序运行超时（超过 5 秒），可能存在死循环。"
+              else
+                echo "::error file=$file::程序运行时发生错误，退出码：$EXIT_CODE"
+              fi
+              ALL_PASSED=false
+              continue
+            fi
+
+            # 对比输出（忽略行尾空白和末尾换行）
+            ACTUAL=$(cat /tmp/output.txt | sed 's/[[:space:]]*$//' | sed '/^$/d')
+
+            if [ "$ACTUAL" = "$EXPECTED" ]; then
+              echo "样例测试通过 ✓"
+              echo "  输入：$(cat /tmp/input.txt)"
+              echo "  期望：$EXPECTED"
+              echo "  实际：$ACTUAL"
+            else
+              echo "::error file=$file::样例测试失败！"
+              echo "  输入：$(cat /tmp/input.txt)"
+              echo "  期望输出：$EXPECTED"
+              echo "  实际输出：$ACTUAL"
+              ALL_PASSED=false
+            fi
+
+          done < changed_files.txt
+
+          if [ "$ALL_PASSED" = false ]; then
+            echo ""
+            echo "❌ 存在编译错误或测试未通过，PR 不允许合并。"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ 所有 C/C++ 文件均编译成功且通过样例测试！"
