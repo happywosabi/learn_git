@@ -67,6 +67,19 @@ git pull origin <分支名>
 ## 2. Git 提交的命令行输出
 
 ```text
-（在这里粘贴你的命令行输出）
+myl@LAPTOP-COE4IRUE MINGW64 ~/Desktop/learn_git (myl-my-solution)
+$ git push origin myl-my-solution
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 32 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 1.13 KiB | 1.13 MiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+remote:
+remote: Create a pull request for 'myl-my-solution' on GitHub by visiting:
+remote:      https://github.com/happywosabi/learn_git/pull/new/myl-my-solution
+remote:
+To https://github.com/happywosabi/learn_git.git
+ * [new branch]      myl-my-solution -> myl-my-solution
 ```
 
