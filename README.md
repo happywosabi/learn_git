@@ -1,87 +1,72 @@
-# 欢迎来到这个git实验仓库
-- 在这里你需要提交⬇️
-    - 一个readme.md
-    - 一个可运行的c语言程序
-## 1.提交
-首先:**你需要一个github账户**，请在注册后将用户名发到我微信上
-然后:我会给予这个仓库的提交权限
-![截屏2026-04-21 18.11.05.png](https://blog.happywosabi.top/upload/%E6%88%AA%E5%B1%8F2026-04-21%2018.11.05.png)
-我为你们每个人创建了一个git分支
-**请务必将你们的报告提交到自己的分支上**
+# Git 学习报告（myl）
 
-⚠️⚠️注意⚠️⚠️
-所有分支都是受保护的分支，你**不能直接使用git push提交到分支**而是要先创建一个dev分支，将代码提交上去，然后再到github上创建分支合并申请，这时会有机器**自动处理**你的请求
-😡😡😡main分支不是保护分支，我看看谁敢把代码提交到main上😡😡😡
-```
-git checkout lwd                    # 切换到自己的分支
-git checkout -b lwd-my-solution     # 创建个人功能分支
-# 编写 README.md 和 solution.c
-git add . && git commit -m "提交作业"
-git push origin lwd-my-solution     # 推送功能分支
-# 去 GitHub 创建 PR：lwd-my-solution → lwd
-# CI 自动测试，通过后才能合并
+## 1. Git 常用指令学习
+
+这次练习主要把最常用的一些命令过了一遍，下面是我自己的理解。
+
+### `git clone`
+
+作用：把远程仓库复制到本地。
+
+```bash
+git clone <仓库地址>
 ```
 
-## 2. 编写readme.md
-请你们使用markdown格式编写git学校报告
+一般是学习一个项目的第一步，先 clone 下来再改代码。
 
-**求求你们不要用AI，字少写一点也行😭😭😭**
-~~(这个文档就是我手打的，0 AI添加)~~
-报告包括以下内容：
-1.git常用指令的学习(clone branch checkout add push pull)
+### `git branch`
 
-2.完成git提交的命令行输出
+作用：查看或创建分支。
+
+```bash
+git branch
+git branch <新分支名>
 ```
-a0000@0000deMacBook-Air vscode % git add solution.c && git commit -m "提交 A+B 解法" && git push origin lwd-test-submit
-[lwd-test-submit a8b7e81] 提交 A+B 解法 (lwd 分支测试)
- 1 file changed, 8 insertions(+)
- create mode 100644 solution.c
-Enumerating objects: 23, done.
-Counting objects: 100% (23/23), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (9/9), done.
-Writing objects: 100% (19/19), 2.21 KiB | 2.21 MiB/s, done.
-Total 19 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (2/2), completed with 1 local object.
-remote: 
-remote: Create a pull request for 'lwd-test-submit' on GitHub by visiting:
-remote:      https://github.com/happywosabi/learn_git/pull/new/lwd-test-submit
-remote: 
-To github.com:happywosabi/learn_git.git
- * [new branch]      lwd-test-submit -> lwd-test-submit
+
+我理解分支就是“并行开发线”，不影响主分支时就先开新分支。
+
+### `git checkout`
+
+作用：切换分支。
+
+```bash
+git checkout <分支名>
 ```
-## 3.一个可以运行的C语言程序
-#### Q:为什么要提交一个C语言程序？
-- 因为我在这个仓库设计一个检查提交上来的代码能否运行，能否通过样例的机制
-- 你提交的代码会经历⬇️
-**提交->github自动编译->github 测试代码能否通过测试样例->若通过则完成提交**
 
-⚠️以后的真实环境下也有这个机制，所以请你们提交一个.c或者.cpp文件，熟悉这个流程⚠️
+！！！切分支前最好先确认当前修改是否已经提交，避免切换时混乱。
 
+### `git add`
 
-#### 要求如下⬇️
+作用：把工作区修改放到暂存区。
 
-A+B Problem
-**不能有多余的内容**，**这也包括了“请输入整数 a 和 b” 这一类的提示用户输入信息的内容**。若包含了这些内容，将无法通过验证测试，将无法完成提交。
-## 题目描述
-输入两个整数 $a, b$，输出它们的和（$|a|,|b| \le {10}^9$）。
-**注意**
-1. 有负数哦！
-2. C/C++ 的 main 函数必须是 `int` 类型。程序正常结束时的返回值必须是 0。
-## 输入格式
-两个以空格分开的整数。
-## 输出格式
-一个整数。
-## 输入输出样例 #1
-
-### 输入 #1
+```bash
+git add <文件名>  #单个文件
+git add .  #所有文件
 ```
-20 30
 
-```
-### 输出 #1
-```
-50
+### `git push`
 
+作用：把本地提交推送到远程仓库。
+
+```bash
+git push origin <分支名>
+```
+
+### `git pull`
+
+作用：拉取远程最新内容并合并到本地。
+
+```bash
+git pull origin <分支名>
+```
+
+多人协作时这个命令很常用，先 pull 再开发能减少冲突。
+
+---
+
+## 2. Git 提交的命令行输出
+
+```text
+（在这里粘贴你的命令行输出）
 ```
 
