@@ -10,6 +10,10 @@ on:
       - hyp
       - zwd
       - myl
+      - oyzy
+      - zhc
+      - ztr
+      - pln
 
 jobs:
   test:
