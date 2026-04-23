@@ -15,5 +15,17 @@
 |git tag|为项目标记里程碑|
 ## 二、git提交命令行输出
 ```
-
+guichen@guichen-Lenovo-Legion-Y7000P2021:~/Documents/ws/learn_git$ git push origin zbw-my-solution
+枚举对象中: 6, 完成.
+对象计数中: 100% (6/6), 完成.
+使用 16 个线程进行压缩
+压缩对象中: 100% (4/4), 完成.
+写入对象中: 100% (4/4), 872 字节 | 872.00 KiB/s, 完成.
+总共 4（差异 0），复用 0（差异 0），包复用 0
+remote: 
+remote: Create a pull request for 'zbw-my-solution' on GitHub by visiting:
+remote:      https://github.com/happywosabi/learn_git/pull/new/zbw-my-solution
+remote: 
+To https://github.com/happywosabi/learn_git.git
+ * [new branch]      zbw-my-solution -> zbw-my-solution
 ```
