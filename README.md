@@ -1,87 +1,100 @@
-# 欢迎来到这个git实验仓库
-- 在这里你需要提交⬇️
-    - 一个readme.md
-    - 一个可运行的c语言程序
-## 1.提交
-首先:**你需要一个github账户**，请在注册后将用户名发到我微信上
-然后:我会给予这个仓库的提交权限
-![截屏2026-04-21 18.11.05.png](https://blog.happywosabi.top/upload/%E6%88%AA%E5%B1%8F2026-04-21%2018.11.05.png)
-我为你们每个人创建了一个git分支
-**请务必将你们的报告提交到自己的分支上**
+Git 标准使用流程
+一、初始环境配置（仅首次使用执行）
+1. 安装 Git
+官方下载地址：https://git-scm.com/，默认安装即可。
+2. 全局账号配置
+配置与代码托管平台一致的用户名、邮箱，保证提交记录有效
+# 配置全局用户名
+git config --global user.name "自定义用户名"
 
-⚠️⚠️注意⚠️⚠️
-所有分支都是受保护的分支，你**不能直接使用git push提交到分支**而是要先创建一个dev分支，将代码提交上去，然后再到github上创建分支合并申请，这时会有机器**自动处理**你的请求
-😡😡😡main分支不是保护分支，我看看谁敢把代码提交到main上😡😡😡
-```
-git checkout lwd                    # 切换到自己的分支
-git checkout -b lwd-my-solution     # 创建个人功能分支
-# 编写 README.md 和 solution.c
-git add . && git commit -m "提交作业"
-git push origin lwd-my-solution     # 推送功能分支
-# 去 GitHub 创建 PR：lwd-my-solution → lwd
-# CI 自动测试，通过后才能合并
-```
+# 配置全局邮箱
+git config --global user.email "自定义邮箱"
 
-## 2. 编写readme.md
-请你们使用markdown格式编写git学校报告
+# 查看配置是否生效
+git config --list
+二、项目初始化两种场景
+场景1：本地已有项目，关联远程仓库
+# 进入项目根目录
+cd 你的项目本地路径
 
-**求求你们不要用AI，字少写一点也行😭😭😭**
-~~(这个文档就是我手打的，0 AI添加)~~
-报告包括以下内容：
-1.git常用指令的学习(clone branch checkout add push pull)
+# 初始化本地git仓库
+git init
 
-2.完成git提交的命令行输出
-```
-a0000@0000deMacBook-Air vscode % git add solution.c && git commit -m "提交 A+B 解法" && git push origin lwd-test-submit
-[lwd-test-submit a8b7e81] 提交 A+B 解法 (lwd 分支测试)
- 1 file changed, 8 insertions(+)
- create mode 100644 solution.c
-Enumerating objects: 23, done.
-Counting objects: 100% (23/23), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (9/9), done.
-Writing objects: 100% (19/19), 2.21 KiB | 2.21 MiB/s, done.
-Total 19 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (2/2), completed with 1 local object.
-remote: 
-remote: Create a pull request for 'lwd-test-submit' on GitHub by visiting:
-remote:      https://github.com/happywosabi/learn_git/pull/new/lwd-test-submit
-remote: 
-To github.com:happywosabi/learn_git.git
- * [new branch]      lwd-test-submit -> lwd-test-submit
-```
-## 3.一个可以运行的C语言程序
-#### Q:为什么要提交一个C语言程序？
-- 因为我在这个仓库设计一个检查提交上来的代码能否运行，能否通过样例的机制
-- 你提交的代码会经历⬇️
-**提交->github自动编译->github 测试代码能否通过测试样例->若通过则完成提交**
+# 关联远程仓库地址（GitHub/Gitee/GitLab）
+git remote add origin 远程仓库HTTPS/SSH地址
 
-⚠️以后的真实环境下也有这个机制，所以请你们提交一个.c或者.cpp文件，熟悉这个流程⚠️
+# 校验远程关联状态
+git remote -v
+场景2：拉取远程已有项目到本地
+# 克隆远程完整项目
+git clone 远程仓库地址
+三、标准日常开发流程（核心规范）
+核心原则：禁止直接在 main/master 主分支开发，所有功能、Bug 修复均使用独立分支
+1. 开发前同步远程最新代码
+# 切换到主分支
+git checkout main
 
+# 拉取远程最新代码，保证本地代码最新
+git pull origin main
+2. 创建专属开发分支
+# 创建并切换到功能分支
+# 规范命名：feature/功能名称、fix/bug问题名称
+git checkout -b feature/xxx功能开发
+git checkout -b fix/xxxbug修复
+3. 代码开发与本地提交
+# 查看文件修改状态
+git status
 
-#### 要求如下⬇️
+# 添加所有修改、新增文件到暂存区
+git add .
 
-A+B Problem
-**不能有多余的内容**，**这也包括了“请输入整数 a 和 b” 这一类的提示用户输入信息的内容**。若包含了这些内容，将无法通过验证测试，将无法完成提交。
-## 题目描述
-输入两个整数 $a, b$，输出它们的和（$|a|,|b| \le {10}^9$）。
-**注意**
-1. 有负数哦！
-2. C/C++ 的 main 函数必须是 `int` 类型。程序正常结束时的返回值必须是 0。
-## 输入格式
-两个以空格分开的整数。
-## 输出格式
-一个整数。
-## 输入输出样例 #1
+# 提交代码，填写规范提交备注
+git commit -m "feat: 新增xxx功能"
+4. 推送本地分支到远程仓库
+# 首次推送需要关联远程分支
+git push -u origin 分支名
 
-### 输入 #1
-```
-20 30
+# 后续重复推送直接执行
+git push
+5. 远程合并代码（PR/MR）
+1. 登录代码托管平台，新建 Pull Request / Merge Request
+2. 源分支：个人开发分支，目标分支：main 主分支
+3. 填写修改说明，提交审核，等待合并
+6. 合并后同步清理代码
+# 切换回主分支
+git checkout main
 
-```
-### 输出 #1
-```
-50
+# 拉取合并后的最新代码
+git pull origin main
 
-```
+# 删除本地已合并的无用分支（可选）
+git branch -d 分支名
 
+四、高频常用命令大全
+# 查看本地所有分支
+git branch
+
+# 切换已有分支
+git checkout 分支名
+
+# 放弃工作区未提交的修改
+git checkout -- 文件名
+git checkout -- .
+
+# 查看版本提交日志
+git log
+
+# 撤销最近一次commit（保留代码修改）
+git reset --soft HEAD^
+
+# 强制拉取远程代码（覆盖本地未提交修改，谨慎使用）
+git fetch --all && git reset --hard origin/main
+五、团队开发避坑准则
+1. 严禁在 main / master 公共主分支直接修改、提交代码
+2. 每次开发前必须执行 pull 同步最新代码，规避代码冲突
+3. 一个分支只对应一个功能/一个 Bug 修复，职责单一
+4. 禁止随意使用 git push -f 强制推送公共分支
+5. 代码冲突必须本地解决完成后，再提交合并
+6. 所有 commit 备注必须清晰规范，禁止无意义提交
+六、完整流程总结
+环境配置 → 同步主分支代码 → 创建功能分支 → 开发调试 → add 暂存 → commit 提交 → push 推送 → 提交 PR/MR 合并 → 同步主分支 & 清理分支
